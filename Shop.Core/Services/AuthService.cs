@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Shop.Models.Models;
+using Constants;
 
 namespace Shop.Core.Services
 {
@@ -16,13 +18,15 @@ namespace Shop.Core.Services
     {
         private readonly IMapper _mapper;
         private readonly UserManager<Profile> _userManager;
+        private RoleManager<Role> _roleManager;
         private readonly AppSettings _appSettings;
 
-        public AuthService(IMapper mapper, UserManager<Profile> userManager, IOptions<AppSettings> appSettings)
+        public AuthService(IMapper mapper, UserManager<Profile> userManager, IOptions<AppSettings> appSettings, RoleManager<Role> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _roleManager = roleManager;
         }
 
         public async Task<ProfileResponse> Register(RegisterRequest request)
@@ -34,10 +38,11 @@ namespace Shop.Core.Services
             var newUser = _mapper.Map<Profile>(request);
 
             var identityResult = await _userManager.CreateAsync(newUser, request.Password);
-            //await _userManager.AddToRoleAsync(newUser, "Customer");
 
             if (!identityResult.Succeeded)
                 throw new Exception(identityResult.Errors.First().Description);
+
+            await _userManager.AddToRoleAsync(newUser, Roles.Customer);
 
             return _mapper.Map<ProfileResponse>(newUser);
         }
@@ -85,6 +90,30 @@ namespace Shop.Core.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo
             };
+        }
+
+        public async Task<ProfileResponse> RegisterAdmin(RegisterRequest request)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
+            if (existingUser != null)
+                throw new Exception("This Email already exists");
+
+            var newUser = _mapper.Map<Profile>(request);
+
+            var identityResult = await _userManager.CreateAsync(newUser, request.Password);
+
+            if (!identityResult.Succeeded)
+                throw new Exception(identityResult.Errors.First().Description);
+
+            await _userManager.AddToRoleAsync(newUser, Roles.Admin);
+
+            return _mapper.Map<ProfileResponse>(newUser);
+        }
+
+        public async Task SeedRoles()
+        {
+            await _roleManager.CreateAsync(new Role(Roles.Admin));
+            await _roleManager.CreateAsync(new Role(Roles.Customer));
         }
     }
 }

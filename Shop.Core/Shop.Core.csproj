@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Constants\Constants.csproj" />
     <ProjectReference Include="..\Shop.Models\Shop.Models.csproj" />
     <ProjectReference Include="..\Shop.Persistence\Shop.Persistence.csproj" />
     <ProjectReference Include="..\Shop.ViewModels\Shop.ViewModels.csproj" />

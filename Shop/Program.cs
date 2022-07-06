@@ -12,6 +12,7 @@ using Shop.Core.Services;
 using Shop.Core.Mapper;
 using Microsoft.OpenApi.Models;
 using Shop.Middlewares;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -80,6 +81,8 @@ builder.Services.AddIdentity<Profile, Role>()
     .AddRoleManager<RoleManager<Role>>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
+
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -106,7 +109,6 @@ builder.Services.AddAuthentication(options =>
 var config = new AutoMapper.MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new MappingProfile());
-    //cfg.ConstructServicesUsing(type => ActivatorUtilities.CreateInstance(serviceProvider, type));
 });
 var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -140,7 +142,11 @@ else
         .AllowAnyHeader();
     });
 }
-
+app.UseWhen(context => context.Request.Path.Value.StartsWith("/api"), subBranch =>
+{
+    //subBranch.UseAuthenticationOverride(JwtBearerDefaults.AuthenticationScheme);
+    app.UseMiddleware<AuthenticationOverrideMiddleware>(new AuthenticationOptions { DefaultScheme = JwtBearerDefaults.AuthenticationScheme });
+});
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
@@ -159,7 +165,7 @@ app.UseEndpoints(endpoints =>
 app.Run();
 
 
-// SeedRoles
+//// SeedRoles
 //var existingRoles = (await _roleRepository.GetAll()).Select(r => r.Name);
 //var roles = Roles.ALL_ROLES;
 //foreach (var role in roles)

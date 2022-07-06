@@ -2,6 +2,9 @@
 using Shop.ViewModels.Wrappers;
 using Shop.Models.Wrappers;
 using Shop.ViewModels.Response;
+using Microsoft.AspNetCore.Identity;
+using Shop.Models.Models;
+using Constants;
 
 namespace Shop.Core.Services
 {
@@ -9,11 +12,13 @@ namespace Shop.Core.Services
     {
         private readonly AutoMapper.IMapper _mapper;
         private readonly IProfileRepository _profileRepository;
+        private readonly UserManager<Profile> _userManager;
 
-        public BuyersService(IProfileRepository profileRepository, AutoMapper.IMapper mapper)
+        public BuyersService(IProfileRepository profileRepository, AutoMapper.IMapper mapper, UserManager<Profile> userManager)
         {
             _profileRepository = profileRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<Page<ProfileResponse>> GetPage(PaginationRequest pageRequest)

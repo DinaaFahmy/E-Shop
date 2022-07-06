@@ -27,5 +27,19 @@ namespace Shop.Controllers
             var result = await _authService.Login(loginViewModel);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterAdmin(RegisterRequest request)
+        {
+            var result = await _authService.RegisterAdmin(request);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SeedRoles()
+        {
+            await _authService.SeedRoles();
+            return Ok();
+        }
     }
 }

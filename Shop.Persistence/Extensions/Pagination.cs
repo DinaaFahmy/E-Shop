@@ -19,6 +19,15 @@ namespace Shop.Persistence.Extensions
             var result = new Page<T>(list.Skip(skip).Take(paginationRequest.PageSize).ToList(), paginationRequest.PageNumber, paginationRequest.PageSize, list.Count());
             return Task.FromResult(result);
         }
+
+        public static Page<T> GetPaged<T>(this List<T> list, PaginationRequest paginationRequest) where T : class
+        {
+            var records = list.Skip(paginationRequest.PageNumber * paginationRequest.PageSize)
+                                     .Take(paginationRequest.PageSize)
+                                     .ToList();
+
+            return new Page<T>(records, paginationRequest.PageNumber, paginationRequest.PageSize, list.Count());
+        }
     }
 
 }
