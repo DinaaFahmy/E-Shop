@@ -7,5 +7,6 @@ namespace Shop.Persistence.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         Task<Page<Product>> GetFilteredProducts(PaginationRequest paginationRequest, long? categoryId);
+        List<Product> GetFilteredProducts(long? categoryId);
     }
 }

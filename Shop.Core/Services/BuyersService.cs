@@ -26,5 +26,11 @@ namespace Shop.Core.Services
             var result = await _profileRepository.GetPage(pageRequest);
             return _mapper.Map<Page<ProfileResponse>>(result);
         }
+
+        public async Task<List<ProfileResponse>> GetAll()
+        {
+            var result = await _profileRepository.GetAll();
+            return _mapper.Map<List<ProfileResponse>>(result);
+        }
     }
 }

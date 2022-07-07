@@ -1,0 +1,73 @@
+﻿@{
+    List<ProductResponse> products = ViewBag.products;
+    List<CategoryResponse> categories = ViewBag.categories;
+}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+        Categories
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var item in categories)
+        {
+            <li><a asp-action="Index" asp-controller="Products" asp-route-id="@item.Id">@item.Name</a></li>
+        }
+    </ul>
+</div>
+<br />
+<br />
+<a asp-action="Create" class="btn btn-primary">Add Product</a>
+<br />
+<br />
+<br />
+<div class="card-deck">
+    @foreach (var item in products)
+    {
+        <div class="card">
+            <img class="card-img-top" src="/images/product.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title"><b>@item.Name</b></h5>
+                <p class="card-text">@item.Description</p>
+                @if (@item.DiscountPercentage > 0)
+                {
+                    <p class="card-text"><del><small class="text-muted">$@item.Price</small></del><b class="text-danger"> $@item.DiscountPercentage</b></p>
+                }
+                else
+                {
+                    <p class="card-text"><b class="text-muted">$@item.Price</b></p>
+                }
+                @if (@item.PriceForTwoPieces > 0)
+                {
+                    <p class="card-text"><b class="text-muted">$@item.Price</b></p>
+                    <p class="card-text"><b class="text-danger">Buy 2 & Pay: $@item.PriceForTwoPieces</b></p>
+                }
+
+                <a class="btn btn-success" asp-controller="Products" asp-action="MakeOrder" asp-route-id="@item.Id"> Order</a>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .card-deck {
+        width: 100%;
+    }
+
+    .card {
+        width: 30%;
+        display: inline-block;
+    }
+
+    .card-body {
+        text-align: center;
+        justify-content: center;
+    }
+</style>

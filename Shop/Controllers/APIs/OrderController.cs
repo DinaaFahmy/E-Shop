@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Shop.ViewModels.Request;
 using Shop.ViewModels.Wrappers;
 
-namespace Shop.Controllers
+namespace Shop.Controllers.APIs
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -27,7 +27,7 @@ namespace Shop.Controllers
 
         [HttpGet]
         [Authorize(Roles = Constants.Roles.Admin)]
-        public async Task<IActionResult> GetFilteredOrders([FromQuery]PaginationRequest paginationRequest, [FromQuery] long? userId)
+        public async Task<IActionResult> GetFilteredOrders([FromQuery] PaginationRequest paginationRequest, [FromQuery] long? userId)
         {
             var result = await _oderService.GetFilteredOrders(paginationRequest, userId);
             return Ok(result);

@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Orders";
+    List<OrderResponse> orders = ViewBag.orders;
+}
+<div class="col-sm-4">
+    <div class="thumbnail">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Creation Date</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in orders)
+                {
+                    <tr>
+                        <td>@order.CreatedDate</td>
+                        <td>@order.ProductId</td>
+                        <td>@order.TotalPrice</td>
+                        <td>@order.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<a asp-action="index" class="btn btn-primary">Back</a>

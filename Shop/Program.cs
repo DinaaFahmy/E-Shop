@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
+builder.Services.AddRazorPages();
+
 
 // Add services to the container.
 
@@ -34,7 +36,8 @@ builder.Services.AddScoped<BuyersService>();
 builder.Services.AddScoped<OrderService>();
 
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -113,10 +116,10 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -144,36 +147,22 @@ else
 }
 app.UseWhen(context => context.Request.Path.Value.StartsWith("/api"), subBranch =>
 {
-    //subBranch.UseAuthenticationOverride(JwtBearerDefaults.AuthenticationScheme);
     app.UseMiddleware<AuthenticationOverrideMiddleware>(new AuthenticationOptions { DefaultScheme = JwtBearerDefaults.AuthenticationScheme });
 });
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseMiddleware<UserDetailsMiddleware>();
 app.UseAuthorization();
-app.MapControllers();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "api/{controller=Home}/{action=Index}/{id?}");
-
-    endpoints.MapDefaultControllerRoute();
+    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{Id?}");
 });
+
+app.MapRazorPages();
+
 app.Run();
-
-
-//// SeedRoles
-//var existingRoles = (await _roleRepository.GetAll()).Select(r => r.Name);
-//var roles = Roles.ALL_ROLES;
-//foreach (var role in roles)
-//{
-//    if (!existingRoles.Contains(role))
-//    {
-//        var toBeAddedRole = new Role { Name = role };
-//        await _roleRepository.Add(toBeAddedRole);
-//    }
-//}
 

@@ -53,5 +53,11 @@ namespace Shop.Core.Services
             var result = await _orderRepository.GetFilteredOrders(paginationRequest, userId);
             return _mapper.Map<Page<OrderResponse>>(result);
         }
+
+        public async Task<List<OrderResponse>> GetFilteredOrders(string userEmail)
+        {
+            var result = await _orderRepository.GetFilteredOrders(userEmail);
+            return _mapper.Map<List<OrderResponse>>(result);
+        }
     }
 }

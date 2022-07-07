@@ -25,5 +25,10 @@ namespace Shop.Persistence.Services
             var users = await _userManager.GetUsersInRoleAsync(Roles.Customer);
             return await users.GetPaged(pageRequest);
         }
+
+        public async Task<List<Profile>> GetAll()
+        {
+            return (await _userManager.GetUsersInRoleAsync(Roles.Customer)).ToList();
+        }
     }
 }

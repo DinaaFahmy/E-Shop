@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Customers";
+    List<ProfileResponse> users = ViewBag.users;
+    List<OrderResponse> orders = ViewBag.orders;
+}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Birth Date</th>
+            <th>Orders</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.Address</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.BirthDate</td>
+               <td><a asp-action="Orders" asp-controller="Customers" asp-route-id="@user.Email" class="btn btn-success">Orders</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

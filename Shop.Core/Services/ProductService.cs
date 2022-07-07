@@ -21,9 +21,16 @@ namespace Shop.Core.Services
 
         public async Task<ProductResponse> CreateProduct(CreateProductRequest request)
         {
-            var category = _mapper.Map<Product>(request);
+            var product = _mapper.Map<Product>(request);
 
-            var result = await _productRepository.Add(category);
+            var result = await _productRepository.Add(product);
+
+            return _mapper.Map<ProductResponse>(result);
+        }
+
+        public async Task<ProductResponse> GetById(long id)
+        {
+            var result = await _productRepository.GetById(id);
 
             return _mapper.Map<ProductResponse>(result);
         }
@@ -32,6 +39,12 @@ namespace Shop.Core.Services
         {
             var result = await _productRepository.GetFilteredProducts(paginationRequest, categoryId);
             return _mapper.Map<Page<ProductResponse>>(result);
+        }
+
+        public List<ProductResponse> GetFilteredProducts(long? categoryId)
+        {
+            var result = _productRepository.GetFilteredProducts(categoryId);
+            return _mapper.Map<List<ProductResponse>>(result);
         }
     }
 }

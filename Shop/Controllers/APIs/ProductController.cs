@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Shop.ViewModels.Request;
 using Shop.ViewModels.Wrappers;
 
-namespace Shop.Controllers
+namespace Shop.Controllers.APIs
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

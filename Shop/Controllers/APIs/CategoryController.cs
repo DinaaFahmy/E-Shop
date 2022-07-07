@@ -3,7 +3,7 @@ using Shop.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Shop.ViewModels.Request;
 
-namespace Shop.Controllers
+namespace Shop.Controllers.APIs
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

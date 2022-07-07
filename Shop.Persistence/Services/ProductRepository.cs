@@ -16,10 +16,18 @@ namespace Shop.Persistence.Services
 
         public async Task<Page<Product>> GetFilteredProducts(PaginationRequest paginationRequest, long? categoryId)
         {
-            if (categoryId.Value == null)
+            if (categoryId == null)
                 return await _dbContext.Set<Product>().AsNoTracking().GetPaged(paginationRequest);
             else
                 return await _dbContext.Set<Product>().Where(a => a.CategoryId == categoryId).AsNoTracking().GetPaged(paginationRequest);
+        }
+
+        public List<Product> GetFilteredProducts(long? categoryId)
+        {
+            if (categoryId == null)
+                return _dbContext.Set<Product>().AsNoTracking().ToList();
+            else
+                return _dbContext.Set<Product>().Where(a => a.CategoryId == categoryId).AsNoTracking().ToList();
         }
     }
 }

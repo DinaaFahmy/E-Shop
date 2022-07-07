@@ -2,7 +2,7 @@
 using Shop.Core.Services;
 using Shop.ViewModels.Request;
 
-namespace Shop.Controllers
+namespace Shop.Controllers.APIs
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
